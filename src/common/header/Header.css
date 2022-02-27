@@ -1,0 +1,32 @@
+.app-header{
+    display: -webkit-box;
+    background-color: #222;
+    height: 36px;
+    padding:8px 16px 8px 32px;
+}
+.app-logo{
+    background-color: #ff7f7f;
+    height: 35px;
+    -webkit-animation:rotate 8s linear infinite;
+    -moz-animation:rotate 8s linear infinite;
+    animation:rotate 8s linear infinite;
+    
+}
+
+@-moz-keyframes rotate { 
+    from { -moz-transform: scale( 1 ) rotateY( 0deg );   }
+    to   { -moz-transform: scale( 1 ) rotateY( 360deg ); }
+}
+@-webkit-keyframes rotate { 
+    from { -webkit-transform: scale( 1 ) rotateY( 0deg );   }
+  to   { -webkit-transform: scale( 1 ) rotateY( 360deg ); }
+}
+@keyframes rotate { 
+    from { -webkit-transform: scale( 1 ) rotateY( 0deg );   }
+  to   { -webkit-transform: scale( 1 ) rotateY( 360deg ); }
+}
+
+.user-auth-actions{
+    margin-left: auto;
+    margin-right: 0;
+}

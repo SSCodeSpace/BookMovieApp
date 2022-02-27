@@ -1,0 +1,14 @@
+.app-form-container{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+.app-form{
+    align-items: center;
+    display:inline-grid;
+    margin-bottom: 16px;
+}
+
+.app-form-element{
+    margin-top:16px !important;
+}
