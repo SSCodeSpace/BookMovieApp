@@ -1,0 +1,37 @@
+.details-container{
+    display:flex;
+}
+
+.details-left{
+    margin-left:24px;
+    margin-top:8px;
+    margin-bottom: 0px;
+    flex-basis:20%;
+    flex-shrink:0
+}
+
+.back-button{
+    margin-left:24px;
+    margin-top:8px;
+    margin-bottom: 0px;
+    height:24px
+}
+
+
+.details-middle{
+    flex-basis:60%;
+    margin-left:16px;
+    margin-right:32px
+}
+
+.details-right{
+    flex-basis:20%;
+}
+
+.movie-detail-label{
+    font-weight: bold;
+}
+
+.movie-detail-plot{
+    margin-top:16px;
+}

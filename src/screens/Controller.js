@@ -14,7 +14,7 @@ const Controller = () => {
         <Route
           exact
           path="/"
-          render={(props) => <Home {...props} baseUrl={baseUrl} />}
+          render={(props) => <Details {...props} baseUrl={baseUrl} />}
         />
         <Route
           path="/movie/:id"
