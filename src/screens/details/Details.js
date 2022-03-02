@@ -7,6 +7,9 @@ import YouTube from 'react-youtube';
 import { StarBorder } from '@material-ui/icons';
 import { GridList,GridListTile} from '@material-ui/core';
 import { GridListTileBar } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+
+
 const tileData = [
     {
       img: {logo},
@@ -41,9 +44,11 @@ export default function Details(){
         <Fragment>
             <Header/>
             <div className='back-button'>
-            <Typography variant='button' >
-                &lt; Back
+                <Link to='/'style={{textDecoration:'none'}}>
+            <Typography variant='button'  >
+                &lt; Back to Home
                 </Typography>
+                </Link>
                 </div>
         <div className='details-container'>
             <div className='details-left'>

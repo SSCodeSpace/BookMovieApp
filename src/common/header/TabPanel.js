@@ -19,7 +19,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-          <Typography>{children}</Typography>
+          <Typography component='div' >{children}</Typography>
         
       )}
     </div>
@@ -39,7 +39,7 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs() {
+export default function BasicTabs(props) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -57,7 +57,8 @@ export default function BasicTabs() {
         <LoginForm />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <RegistrationForm />
+       
+        <RegistrationForm {...props} />
       </TabPanel>
     </Fragment>
   );

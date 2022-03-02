@@ -12,7 +12,8 @@ class Header extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showAuthModal: false
+            showAuthModal: false,
+            
         }
     }
     handleLogin = () => {
@@ -20,6 +21,7 @@ class Header extends React.Component {
     }
     render() {
         return (
+            
             <Fragment>
                 <div className='app-header'>
                     <img src={logo} className='app-logo' alt='Movie logo' />
@@ -33,8 +35,9 @@ class Header extends React.Component {
                     isOpen={this.state.showAuthModal}
                     contentLabel="Auth modal"
                     style={{ content: { top: '50%', left: '50%', right: 'auto', bottom: 'auto', transform: 'translate(-50%,-50%)' } }}
+                    {...this.props}
                 >
-                    <BasicTabs />
+                    <BasicTabs {...this.props}/>
                 </ReactModal>
              
 
