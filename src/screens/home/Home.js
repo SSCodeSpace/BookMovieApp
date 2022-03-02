@@ -22,7 +22,7 @@ export default function Home(props){
             <UpcomingMovies/>
             <div className='released-movies-container'>
                 <div className='released-movies'>
-                <ReleasedMovies/>
+                <ReleasedMovies {...props}/>
                 </div>
                 <div className='movies-filter'>
                 <MovieFilter/>

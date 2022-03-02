@@ -4,7 +4,8 @@ import { createStore } from "redux";
 const userDetails = {
     "isLoggedIn": "false",
     "userToken": "",
-    "baseAppURL": ""
+    "baseAppURL": "",
+    "showAuthModal":false
 
 }
 
@@ -19,6 +20,11 @@ function BookMovieReducer(state = userDetails, action) {
         case 'FETCH_STATE': {
             return {
                 ...state,
+            } 
+        }
+        case 'SAVE_LOGIN': {
+            return {
+                ...state,"userToken":action.payload
             } 
         }
 

@@ -42,7 +42,7 @@ export default function Details(){
    
     return(
         <Fragment>
-            <Header/>
+            <Header showBookShow={true}/>
             <div className='back-button'>
                 <Link to='/'style={{textDecoration:'none'}}>
             <Typography variant='button'  >

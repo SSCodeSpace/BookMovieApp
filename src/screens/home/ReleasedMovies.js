@@ -115,7 +115,8 @@ function ReleasedMovies(props) {
     <div className={classes.root}>
       <GridList className={classes.gridList} cols={4} cellHeight="340px">
         {tileData.map(tile => (
-        <Link to={`/movie/${tile.id}`}>
+        <Link to={`/movie/${tile.id}`} >
+          
           <GridListTile key={tile.id} >
             
             <img src={logo} alt={tile.title} />

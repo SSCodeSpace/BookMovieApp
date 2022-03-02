@@ -54,7 +54,7 @@ export default function BasicTabs(props) {
       </Tabs>
 
       <TabPanel value={value} index={0}>
-        <LoginForm />
+        <LoginForm {...props} />
       </TabPanel>
       <TabPanel value={value} index={1}>
        
