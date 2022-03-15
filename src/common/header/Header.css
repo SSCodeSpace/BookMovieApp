@@ -2,7 +2,7 @@
     display: -webkit-box;
     background-color: #222;
     height: 36px;
-    padding:8px 16px 8px 32px;
+    padding:8px 32px 8px 16px;
 }
 .app-logo{
     background-color: #ff7f7f;
@@ -11,6 +11,12 @@
     -moz-animation:rotate 8s linear infinite;
     animation:rotate 8s linear infinite;
     
+}
+.upcoming-movies-header{
+    background-color: #ff9999;
+    padding: 8px;
+    text-align: center;
+    font-size: 1rem;
 }
 
 @-moz-keyframes rotate { 
@@ -36,4 +42,12 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) !important;
+}
+
+.dispNone {
+    display: none;
+}
+
+.dispBlock {
+    display: block;
 }

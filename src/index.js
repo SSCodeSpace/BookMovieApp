@@ -4,11 +4,9 @@ import './index.css';
 import 'typeface-roboto';
 import registerServiceWorker from './registerServiceWorker';
 import Controller from './screens/Controller';
-import store from '../src/common/header/BookMovieStore';
-import {Provider} from 'react-redux';
+
 
 ReactDOM.render(
-    <Provider store={store}>
-        <Controller />
-    </Provider>, document.getElementById('root'));
+    <Controller />
+    , document.getElementById('root'));
 registerServiceWorker();

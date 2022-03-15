@@ -1,121 +1,74 @@
-import { Typography } from '@material-ui/core';
-import React, { Fragment } from 'react';
-import Header from '../../common/header/Header';
-import './Details.css';
-import logo from '../../assets/logo.svg'
-import YouTube from 'react-youtube';
-import { StarBorder } from '@material-ui/icons';
-import { GridList,GridListTile} from '@material-ui/core';
-import { GridListTileBar } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import React,{useState,useEffect} from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
 
 
-const tileData = [
-    {
-      img: {logo},
-      title: 'Breakfast',
-      author: 'jill111',
-      cols: 2,
-      featured: true,
-    },
-    {
-      img: '../../assets/logo.svg',
-      title: 'Tasty burger',
-      author: 'director90',
-    },]
 
 
-const opts = {
-    height: '390',
-    width: '100%',
-    playerVars: {
-      // https://developers.google.com/youtube/player_parameters
-      autoplay: 1,
-    },
-  };
-  const _onReady=(e)=> {
-    // access to player in all event handlers via event.target
-    e.target.pauseVideo();
-  }
-
-export default function Details(){
+  
+const styles = theme => ({
+  root: {
    
-    return(
-        <Fragment>
-            <Header showBookShow={true}/>
-            <div className='back-button'>
-                <Link to='/'style={{textDecoration:'none'}}>
-            <Typography variant='button'  >
-                &lt; Back to Home
-                </Typography>
-                </Link>
-                </div>
-        <div className='details-container'>
-            <div className='details-left'>
-                <img src={logo} style={{height:"200px",width:"200px"}}/>
-            </div>
-            <div className='details-middle'>
-                <Typography variant='headline' component='h2' >
-                Inception
-                </Typography>
-                <Typography variant='body1'>
-                <span className='movie-detail-label'>Genre: </span>Action, Adventure, Sci-fi 
-                </Typography>
-                <Typography variant='body1'>
-                <span className='movie-detail-label'>Duration: </span>148 
-                </Typography>
-                <Typography variant='body1'>
-                <span className='movie-detail-label'>Release Date: </span>Fri Jul 16 2010 
-                </Typography>
-                <Typography variant='body1'>
-                <span className='movie-detail-label'>Rating: </span>8.8
-                </Typography>
-                
-                <Typography variant='body1' >
-                <span className='movie-detail-label'>Plot: </span> <a href='www.google.com'>(Wiki URL)</a>
-                </Typography>
-                <Typography variant='body1' >
-                <span className='movie-detail-label'>Trailer: </span>
-                </Typography>
-                <YouTube videoId="2g811Eo7K8U" opts={opts} onReady={_onReady} />;
-                
-            </div>
-            <div className='details-right'>
-                <Typography variant='body1' style={{height:"24px"}}>
-                <span className='movie-detail-label'>Rate this movie:</span>
-                </Typography>
-                <StarBorder>
+    justifyContent: 'space-around',
+    overflow: 'hidden',
+    backgroundColor: theme.palette.background.paper,
+  },
+  gridList: {
+    flexWrap: 'nowrap',
+    transform: 'translateZ(0)',
+  },
+  title: {
+    color: theme.palette.white,
+  },
+  titleBar: {
+    background:
+      'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+  },
+});
 
-                </StarBorder>
-                <StarBorder>
-                    
-                </StarBorder>
-                <StarBorder>
-                    
-                </StarBorder>
-                <StarBorder>
-                    
-                </StarBorder>
-                <StarBorder>
-                    
-                </StarBorder>
-                <Typography variant='body1'>
-                <span className='movie-detail-label'>Artists: </span>
-                </Typography>
-                <GridList cols={2}>
-        {tileData.map(tile => (
-          <GridListTile key={tile.img} >
-            <img src={logo} alt={tile.title} />
+function UpcomingMovies(props) {
+
+  const [moviesList,setMoviesList]=useState([]);
+
+  async function loadUpComingMovies() {
+    const rawResponse = await fetch(props.baseUrl + "/movies?" + new URLSearchParams({status: 'PUBLISHED'}));
+    const UpcomingMovies = await rawResponse.json();
+    setMoviesList(UpcomingMovies.movies);
+   
+}
+
+useEffect(() => {
+  loadUpComingMovies();
+ 
+}, []);
+
+  const { classes } = props;
+
+  return (
+    <div className={classes.root}>
+      <GridList cellHeight={'250'} style={{ flexWrap: "nowrap", transform: 'translateZ(0)' }} cols={6}>
+        {moviesList.map(movie => (
+          <GridListTile key={movie.id} style={{height:'250px'}}>
+            <img src={movie.poster_url} alt={movie.title}/>
             <GridListTileBar
-              title={tile.title}
-              
+              title={movie.title}
+              classes={{
+                
+                title: classes.title,
+              }}
             />
           </GridListTile>
         ))}
       </GridList>
-            </div>
-
-        </div>
-        </Fragment>
-    )
+    </div>
+  );
 }
+
+UpcomingMovies.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(UpcomingMovies);

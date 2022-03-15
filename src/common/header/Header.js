@@ -1,76 +1,121 @@
-import React, { useEffect, useState } from 'react';
-import { Fragment } from 'react';
-import './Header.css';
-import logo from '../../assets/logo.svg';
-import { Button } from '@material-ui/core';
-import LoginForm from '../../screens/auth/LoginForm';
-import RegistrationForm from '../../screens/auth/RegistrationForm';
-import BasicTabs from '../header/TabPanel';
-import ReactModal from 'react-modal';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from "react";
+import { Fragment } from "react";
+import "./Header.css";
+import logo from "../../assets/logo.svg";
+import { Button } from "@material-ui/core";
+import BasicTabs from "../header/TabPanel";
+import Modal from "react-modal";
 
 export default function Header(props) {
-    /* constructor(props) {
-         super(props);
-         this.state = {
-             showAuthModal: false,
-             
-         }
-     }*/
-    const [authModalFlag, setAuthModal] = useState(false);
-    const [bookShowFlag, setBookShowFlag] = useState(false);
+  const [authModalFlag, setAuthModal] = useState(false);
+  const [session, setSessionDetails] = React.useState(
+    window.sessionStorage.getItem("access-token")
+  );
+  const handleLogin = () => {
+    setAuthModal(true);
+  };
 
-    const handleLogin = () => {
-        setAuthModal(true);
+  Modal.setAppElement("#root");
+
+  //handle logout event
+  const handleLogout = async () => {
+    try {
+      const authToken = window.sessionStorage.getItem("access-token");
+      const rawResponse = await fetch(props.baseUrl + "/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: "Bearer " + authToken,
+          Accept: "*/*",
+        },
+      });
+      if (rawResponse.status === 200) {
+        window.sessionStorage.removeItem("access-token");
+        window.sessionStorage.removeItem("user-details");
+        setSessionDetails("");
+      }
+    } catch (exception) {
+      console.log("Logout failed due to " + exception);
     }
-    const closeAuthModal = () => {
-        // this.setState({showAuthModal:false})
-        setAuthModal(false);
+  };
+
+  //handle bookshow event
+  const handleBookShow = () => {
+    if (session) {
+      window.location.href = `/bookshow/${props.movieID}`;
+    } else {
+      setAuthModal(true);
     }
-    useEffect(()=>{
-        setBookShowFlag(props.showBookShow);
-    })
-    const displayBookShow=()=>{
-        setBookShowFlag(true);
-    }
-    const accessToken = window.sessionStorage.getItem('access-token');
+  };
 
-    /* useEffect(()=>{
-         const accessToken = window.sessionStorage.getItem('access-token');
-         if(accessToken===""){
-            
-         }else{
-             useDispatch({"type":"SAVE_LOGIN","payload":accessToken});
-         }
-     })*/
+  const closeAuthModal = (props) => {
+    setAuthModal(false);
+  };
 
-    return (
+  // Maintain flag to determine if the BookShow button can be displayed or not
+  let bookShowButton = "";
+  if (props.showBookShow) {
+    bookShowButton = (
+      <Button
+        variant="contained"
+        color="primary"
+        style={{ marginLeft: "10px" }}
+        onClick={handleBookShow}
+      >
+        Book Show
+      </Button>
+    );
+  }
 
-        <Fragment>
-            <div className='app-header'>
-                <img src={logo} className='app-logo' alt='Movie logo' />
-                <div className='user-auth-actions'>
-                    if({accessToken})===""{
-                    <Button variant='contained' color='default' onClick={handleLogin}> Login </Button>
-                    }else{
-                        <Button variant='contained' color='default'>Logout</Button>
-                    }if({bookShowFlag}){
-                        <Button variant='contained' color='primary'>Book Show</Button>
-                    }
-                </div>
-            </div>
-            <ReactModal
-                isOpen={authModalFlag}
-                contentLabel="Auth modal"
-                style={{ content: { top: '50%', left: '50%', right: 'auto', bottom: 'auto', transform: 'translate(-50%,-50%)' } }}
-                {...props}
+  return (
+    <Fragment>
+      <div className="app-header">
+        <img src={logo} className="app-logo" alt="Movie logo" />
+        <div className="user-auth-actions">
+          {session ? (
+            <Button
+              variant="contained"
+              color="default"
+              style={{ marginLeft: "10px" }}
+              onClick={handleLogout}
             >
-                <BasicTabs {...props} closeAuthFun={closeAuthModal}  setBookShowFlag={setBookShowFlag}/>
-            </ReactModal>
+              Logout
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="default"
+              style={{ marginLeft: "10px" }}
+              onClick={handleLogin}
+            >
+              Login
+            </Button>
+          )}
 
+          {bookShowButton}
+        </div>
+      </div>
 
-        </Fragment>
-    )
+      <Modal
+        isOpen={authModalFlag}
+        contentLabel="Auth modal"
+        style={{
+          content: {
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            transform: "translate(-50%,-50%)",
+          },
+        }}
+        {...props}
+      >
+        <BasicTabs
+          {...props}
+          closeAuthFun={closeAuthModal}
+          saveSessionDetails={setSessionDetails}
+        />
+      </Modal>
+    </Fragment>
+  );
 }
-
-
