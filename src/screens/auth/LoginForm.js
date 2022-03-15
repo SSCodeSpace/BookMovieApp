@@ -104,6 +104,7 @@ export default function LoginForm(props) {
             name="password"
             value={loginDetails.password}
             onChange={handleChange}
+            type="password"
           />
           <FormHelperText className={reqPassword}>
             <span className="red">required</span>
