@@ -3,7 +3,7 @@ import { Button, FormControl, FormHelperText } from "@material-ui/core";
 import { InputLabel } from "@material-ui/core";
 import { Input } from "@material-ui/core";
 import "../../common/header/Form.css";
-import "./Registration.css";
+import "./RegistrationForm.css";
 
 export default function RegistrationForm(props) {
   //initialize variables
