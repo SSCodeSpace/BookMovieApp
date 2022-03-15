@@ -5,20 +5,23 @@ import { Input } from "@material-ui/core";
 import "../../common/header/Form.css";
 
 export default function LoginForm(props) {
+  //store variables for later use in api calls
   const loginURL = `${props.baseUrl}auth/login`;
   const [loginDetails, setLoginDetails] = useState({
     username: "",
     password: "",
   });
+
   const [reqUsername, setReqUserName] = React.useState("dispNone");
   const [reqPassword, setReqPassword] = React.useState("dispNone");
 
+  //handle input change
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
     setLoginDetails((state) => ({ ...state, [name]: value }));
   };
-
+  //validate login information
   const validateLoginForm = () => {
     loginDetails.username === ""
       ? setReqUserName("dispBlock")
@@ -32,22 +35,21 @@ export default function LoginForm(props) {
       return true;
     }
   };
-
+  //handle submit action
   const handleSubmit = (event) => {
     event.preventDefault();
     const validationFlag = validateLoginForm();
     if (validationFlag) {
       try {
         loginUser();
-      } catch (e) {}
+      } catch (e) { }
     }
   };
-
+  //call login api
   async function loginUser() {
     const authParam = window.btoa(
       `${loginDetails.username}:${loginDetails.password}`
     );
-    console.log("authparam " + authParam);
 
     try {
       const rawResponse = await fetch(loginURL, {
@@ -67,7 +69,6 @@ export default function LoginForm(props) {
         );
 
         props.saveSessionDetails(window.sessionStorage.getItem("access-token"));
-        console.log("Login successful");
         props.closeAuthFun();
       }
     } catch (e) {

@@ -1,74 +1,146 @@
-import React,{useState,useEffect} from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
+import { Typography } from "@material-ui/core";
+import React from "react";
+import Header from "../../common/header/Header";
+import "./Details.css";
+import YouTube from "react-youtube";
+import { GridListTileBar, GridList, GridListTile } from "@material-ui/core";
+import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
+import Rating from "../../common/Rating";
 
-
-
-  
-const styles = theme => ({
-  root: {
-   
-    justifyContent: 'space-around',
-    overflow: 'hidden',
-    backgroundColor: theme.palette.background.paper,
+//set variables for the youtube video fetching
+const opts = {
+  height: "390",
+  width: "850",
+  playerVars: {
+    autoplay: 1,
   },
-  gridList: {
-    flexWrap: 'nowrap',
-    transform: 'translateZ(0)',
-  },
-  title: {
-    color: theme.palette.white,
-  },
-  titleBar: {
-    background:
-      'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
-  },
-});
 
-function UpcomingMovies(props) {
+};
+const _onReady = (e) => {
+  e.target.pauseVideo();
+};
 
-  const [moviesList,setMoviesList]=useState([]);
+export default function Details(props) {
+  //initialize variable to store movie details
+  const [movieDetails, setMovieDetails] = React.useState({
+    artists: [],
+    censor_board_rating: "",
+    duration: 0,
+    genres: [],
+    id: "",
+    poster_url: "",
+    rating: 0,
+    release_date: "",
+    status: "",
+    storyline: "",
+    title: "",
+    trailer_url: "",
+    wiki_url: "",
+  });
 
-  async function loadUpComingMovies() {
-    const rawResponse = await fetch(props.baseUrl + "/movies?" + new URLSearchParams({status: 'PUBLISHED'}));
-    const UpcomingMovies = await rawResponse.json();
-    setMoviesList(UpcomingMovies.movies);
-   
-}
+  //call movie details api
+  async function loadMovieDetails() {
+    const rawResponse = await fetch(
+      props.baseUrl + "movies/" + props.match.params.id,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache",
+        },
+      }
+    );
+    const movieData = await rawResponse.json();
+    setMovieDetails(movieData);
+  }
 
-useEffect(() => {
-  loadUpComingMovies();
- 
-}, []);
+  useEffect(() => {
+    loadMovieDetails();
+  }, []);
 
-  const { classes } = props;
+  function dateString(string) {
+    return new Date(string).toDateString();
+  }
+
+  const ratingClickHandler = (event) => {
+    console.log(event.target);
+  };
 
   return (
-    <div className={classes.root}>
-      <GridList cellHeight={'250'} style={{ flexWrap: "nowrap", transform: 'translateZ(0)' }} cols={6}>
-        {moviesList.map(movie => (
-          <GridListTile key={movie.id} style={{height:'250px'}}>
-            <img src={movie.poster_url} alt={movie.title}/>
-            <GridListTileBar
-              title={movie.title}
-              classes={{
-                
-                title: classes.title,
-              }}
+    <div>
+      <Header showBookShow={true} {...props} movieID={movieDetails.id} />
+      <div>
+        <div className="back-button">
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <Typography variant="button">&lt; Back to Home</Typography>
+          </Link>
+        </div>
+        <div className="details-container">
+          <div className="details-left">
+            <img src={movieDetails.poster_url} alt={movieDetails.title} />
+          </div>
+          <div className="details-middle">
+            <Typography variant="headline" component="h2">
+              {movieDetails.title}
+            </Typography>
+            <Typography variant="body1">
+              <span className="movie-detail-label">Genre: </span>
+              {movieDetails.genres.join(", ")}
+            </Typography>
+            <Typography variant="body1">
+              <span className="movie-detail-label">Duration: </span>
+              {movieDetails.duration}
+            </Typography>
+            <Typography variant="body1">
+              <span className="movie-detail-label">Release Date: </span>
+              {dateString(movieDetails.release_date)}
+            </Typography>
+            <Typography variant="body1">
+              <span className="movie-detail-label">Rating: </span>
+              {movieDetails.rating}
+            </Typography>
+            <Typography variant="body1" className="movie-detail-plot">
+              <span className="movie-detail-label">Plot: </span>{" "}
+              <a href={movieDetails.wiki_url}>(Wiki URL)</a>{" "}
+              {movieDetails.storyline}
+            </Typography>
+            <Typography variant="body1" className="movie-detail-plot">
+              <span className="movie-detail-label">Trailer: </span>
+            </Typography>
+            <YouTube
+              videoId={movieDetails.trailer_url.split("v=")[1]}
+              opts={opts}
+              onReady={_onReady}
             />
-          </GridListTile>
-        ))}
-      </GridList>
+            ;
+          </div>
+          <div className="details-right">
+            <Typography style={{ fontWeight: 600 }} component="div">
+              Rate this movie:
+              <Rating
+                numberOfStars="5"
+                rating={0}
+                onClick={ratingClickHandler}
+              />
+            </Typography>
+            <Typography style={{ margin: "16px 0" }}>
+              <span className="movie-detail-label">Artists: </span>
+            </Typography>
+            <GridList cols={2}>
+              {movieDetails.artists.map((artist) => (
+                <GridListTile key={artist.id}>
+                  <img src={artist.profile_url} alt={"artist profile link"} />
+                  <GridListTileBar
+                    title={artist.first_name + " " + artist.last_name}
+                  />
+                </GridListTile>
+              ))}
+            </GridList>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
-
-UpcomingMovies.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(UpcomingMovies);

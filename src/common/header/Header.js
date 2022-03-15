@@ -72,6 +72,7 @@ export default function Header(props) {
       <div className="app-header">
         <img src={logo} className="app-logo" alt="Movie logo" />
         <div className="user-auth-actions">
+          {bookShowButton}
           {session ? (
             <Button
               variant="contained"
@@ -92,7 +93,7 @@ export default function Header(props) {
             </Button>
           )}
 
-          {bookShowButton}
+
         </div>
       </div>
 
